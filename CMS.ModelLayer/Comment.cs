@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS.ModelLayer
 {
-    public class Comment
+    public class Comment: BaseEntity
     {
         [Key]
         [Required]

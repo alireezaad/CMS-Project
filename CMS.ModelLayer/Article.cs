@@ -8,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS.ModelLayer
 {
-    public class Article
+    public class Article: BaseEntity
     {
         [Key]
         [Required]

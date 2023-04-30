@@ -7,8 +7,8 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS.ModelLayer
-{ 
-    public class Category
+{
+    public class Category : BaseEntity
     {
         [Key]
         [Required]

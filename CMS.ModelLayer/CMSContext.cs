@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace CMS.ModelLayer
 {
-    class CMSContext:DbContext
+    public class CMSContext:DbContext
     {
         public DbSet<User> users { get; set; }
         public DbSet<Category> categories { get; set; }
