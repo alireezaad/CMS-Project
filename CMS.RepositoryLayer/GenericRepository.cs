@@ -20,63 +20,63 @@ namespace CMS.RepositoryLayer
             dbContext = context.Set<T>();
         }
 
-        public IEnumerable<T> GetAll()
+        public async Task<IEnumerable<T>> GetAll()
         {
-            return dbContext.ToList();
+            return await dbContext.ToListAsync();
         }
 
-        public T GetEntity(int id)
+        public async Task<T> GetEntity(int id)
         {
-            return dbContext.Find(id);
+            return await dbContext.FindAsync(id);
         }
-        public bool Add(T entity)
+        public Task<bool> Add(T entity)
         {
             try
             {
                 dbContext.Add(entity);
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception)
             {
 
-                return false;
+                return Task.FromResult(false);
             }
         }
 
-        public bool Update(T entity)
+        public Task<bool> Update(T entity)
         {
             try
             {
                 db.Entry(entity).State = EntityState.Modified;
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception)
             {
 
-                return false;
+                return Task.FromResult(false);
             }
         }
-        public bool Delete(T entity)
+        public Task<bool> Delete(T entity)
         {
             try
             {
                 db.Entry(entity).State = EntityState.Deleted;
-                return true;
+                return Task.FromResult(true);
             }
             catch (Exception)
             {
 
-                return false;
+                return Task.FromResult(false);
             }
         }
 
-        public bool Delete(int id)
+        public async Task<bool> Delete(int id)
         {
             try
             {
-                T entity = GetEntity(id);
+                T entity = await GetEntity(id);
                 db.Entry(entity).State = EntityState.Deleted;
-                return true;
+                return  true;
             }
             catch (Exception)
             {
@@ -92,6 +92,6 @@ namespace CMS.RepositoryLayer
         public void Dispose()
         {
             db.Dispose();
-        }    
+        }
     }
 }

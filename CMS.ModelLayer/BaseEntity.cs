@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CMS.ModelLayer
 {
-    public class BaseEntity
+    public abstract class BaseEntity
     {
     }
 }
