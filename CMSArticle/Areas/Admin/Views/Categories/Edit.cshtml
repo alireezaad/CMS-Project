@@ -1,19 +1,19 @@
-﻿@model CMS.ModelLayer.Category
+﻿@model CMSArticle.Views.ViewModel.CategoryViewModel
 
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "ویرایش";
 }
 
-<h2>Edit</h2>
+<h2>ویرایش دسته بندی @Model.Title</h2>
+<br />
+<br />
+<br />
 
-
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Categories", FormMethod.Post, new { enctype = "multipart/form-data" }))
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
-        <h4>Category</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.CategoryId)
 
@@ -28,22 +28,31 @@
         <div class="form-group">
             @Html.LabelFor(model => model.ImageName, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.ImageName, new { htmlAttributes = new { @class = "form-control" } })
+                <img src="~/Images/Category/@Model.ImageName" class="image150-100 form-control" id="newImagePreview"><br />
+                <input type="file" class="form-control" name="newImage" id="imageUpload" onchange="imagePreview(this)" value="nophoto.png" />
                 @Html.ValidationMessageFor(model => model.ImageName, "", new { @class = "text-danger" })
             </div>
         </div>
 
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+                <input type="submit" value="Save" class="btn btn-default btn-success" />
+                <input type="button" value="Back to list" class="btn btn-default btn-info" onclick="location.href='@Url.Action("Index")'" />
             </div>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
+<script>
+    function imagePreview(input) {
+        if (input.files && input.files[0]) {
+            var filerdr = new FileReader();
+            filerdr.onload = function (e) {
+                jQuery('#newImagePreview').attr('src', e.target.result);
+            }
+            filerdr.readAsDataURL(input.files[0]);
+        }
+    }
+</script>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

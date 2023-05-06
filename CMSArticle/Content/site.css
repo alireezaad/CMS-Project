@@ -1,6 +1,10 @@
 ﻿body {
 }
 
+.image150-100{
+    width: 150px;
+    height: 100px;
+}
 @font-face {
     font-family: 'vazir-Bold';
     src: url(../fonts/Vazir-Bold.eot) format('embedded-opentype');

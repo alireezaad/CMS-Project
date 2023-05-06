@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using CMS.ModelLayer;
+using CMSArticle.Views.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,7 +16,8 @@ namespace CodeFirst_EF.App_Start
         {
             MapperConfiguration configuration = new MapperConfiguration(t => 
             {
-                /*t.CreateMap<Student, StudentViewModel>();*/
+                t.CreateMap<Category, CategoryViewModel>().IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
+                t.CreateMap<CategoryViewModel,Category >().IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
 
             });
             mapper = configuration.CreateMapper();

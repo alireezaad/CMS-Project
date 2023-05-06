@@ -9,6 +9,9 @@ using System.Web;
 using System.Web.Mvc;
 using CMS.ModelLayer;
 using CMS.ServiceLayer;
+using CodeFirst_EF.App_Start;
+using CMSArticle.Views.ViewModel;
+using System.IO;
 
 namespace CMSArticle.Areas.Admin.Controllers
 {
@@ -20,13 +23,13 @@ namespace CMSArticle.Areas.Admin.Controllers
         {
             _Service = new CategoryService(db);
         }
-        // GET: Admin/Categories
-        public ActionResult Index()
+        public async Task<ActionResult> Index()
         {
-            return View(_Service.GetAll());
+            IEnumerable<Category> category = await _Service.GetAll();
+            return View(AutoMapperConfig.mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(category));
         }
 
-        // GET: Admin/Categories/Details/5
+        [HttpGet]
         public async Task<ActionResult> Details(int? id)
         {
             if (id == null)
@@ -38,33 +41,49 @@ namespace CMSArticle.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            return View(category);
+            var viewModel = AutoMapperConfig.mapper.Map<Category, CategoryViewModel>(category);
+            return View(viewModel);
         }
 
-        // GET: Admin/Categories/Create
+        [HttpGet]
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Admin/Categories/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "CategoryId,Title,ImageName")] Category category)
+        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title")] CategoryViewModel viewModel, HttpPostedFileBase newImage)
         {
             if (ModelState.IsValid)
             {
-                _Service.Add(category);
-                _Service.Save();
+                string imageName = "nophoto.png";
+                if (newImage != null)
+                {
+                    if (newImage.ContentType != "image/jpeg" && newImage.ContentType != "image/png")
+                    {
+                        ModelState.AddModelError("newImage", "فرمت عکس انتخابی باید png و یا jpg باشد");
+                        return View(viewModel);
+                    }
+                    if (newImage.ContentLength > 300000)
+                    {
+                        ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
+                        return View(viewModel);
+                    }   
+                    imageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
+                    newImage.SaveAs(Server.MapPath("/Images/Category/") + imageName);
+                }
+                viewModel.ImageName = imageName;
+                Category category = AutoMapperConfig.mapper.Map<CategoryViewModel, Category>(viewModel);
+                 await _Service.Add(category);
+                 _Service.Save();
                 return RedirectToAction("Index");
             }
 
-            return View(category);
+            return View(viewModel);
         }
 
-        // GET: Admin/Categories/Edit/5
+        [HttpGet]
         public async Task<ActionResult> Edit(int? id)
         {
             if (id == null)
@@ -76,23 +95,38 @@ namespace CMSArticle.Areas.Admin.Controllers
             {
                 return HttpNotFound();
             }
-            return View(category);
+            CategoryViewModel viewModel = AutoMapperConfig.mapper.Map<Category,CategoryViewModel >(category);
+            return View(viewModel);
         }
 
-        // POST: Admin/Categories/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "CategoryId,Title,ImageName")] Category category)
+        public async Task<ActionResult> Edit([Bind(Include = "CategoryId,Title,ImageName")] CategoryViewModel viewModel, HttpPostedFileBase newImage)
         {
             if (ModelState.IsValid)
             {
-                _Service.Update(category);
+                if (newImage != null)
+                {
+                    if (newImage.ContentType != "image/jpeg" && newImage.ContentType != "image/png")
+                    {
+                        ModelState.AddModelError("newImage", "فرمت عکس انتخابی باید png و یا jpg باشد");
+                        return View(viewModel);
+                    }
+                    if (newImage.ContentLength > 300000)
+                    {
+                        ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
+                        return View(viewModel);
+                    }
+                    viewModel.ImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
+                    newImage.SaveAs(Server.MapPath("/Images/Category/") + viewModel.ImageName);
+                }
+                Category category = AutoMapperConfig.mapper.Map<CategoryViewModel, Category>(viewModel);
+                await _Service.Update(category);
                 _Service.Save();
                 return RedirectToAction("Index");
             }
-            return View(category);
+            return View(viewModel);
         }
 
         // GET: Admin/Categories/Delete/5

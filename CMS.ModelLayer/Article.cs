@@ -27,6 +27,7 @@ namespace CMS.ModelLayer
         public bool IsActive { get; set; }
         public int Like { get; set; }
         public int Visit { get; set; }
+        public int AdminId { get; set; }
 
 
         public Category category { get; set; }
