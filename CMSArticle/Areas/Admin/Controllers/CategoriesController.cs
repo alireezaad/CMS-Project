@@ -153,7 +153,6 @@ namespace CMSArticle.Areas.Admin.Controllers
         protected override void Dispose(bool disposing)
         {
             _Service.Dispose();
-        
         }
     }
 }
