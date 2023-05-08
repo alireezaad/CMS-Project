@@ -29,26 +29,27 @@ namespace CMSArticle.Areas.Admin.Controllers
             return View(AutoMapperConfig.mapper.Map<IEnumerable<Category>, IEnumerable<CategoryViewModel>>(category));
         }
 
-        [HttpGet]
-        public async Task<ActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Category category = await _Service.GetEntity(id.Value);
-            if (category == null)
-            {
-                return HttpNotFound();
-            }
-            var viewModel = AutoMapperConfig.mapper.Map<Category, CategoryViewModel>(category);
-            return View(viewModel);
+        //[HttpGet]
+        //public async Task<ActionResult> Details(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        //    }
+        //    Category category = await _Service.GetEntity(id.Value);
+        //    if (category == null)
+        //    {
+        //        return HttpNotFound();
+        //    }
+        //    var viewModel = AutoMapperConfig.mapper.Map<Category, CategoryViewModel>(category);
+        //    return View(viewModel);
         }
 
         [HttpGet]
         public ActionResult Create()
         {
             return View();
+            
         }
 
         [HttpPost]
@@ -118,7 +119,8 @@ namespace CMSArticle.Areas.Admin.Controllers
                         ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
                         return View(viewModel);
                     }
-                    viewModel.ImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
+                    System.IO.File.Delete(Server.MapPath("/Images/Category/") + viewModel.ImageName);
+                    //viewModel.ImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
                     newImage.SaveAs(Server.MapPath("/Images/Category/") + viewModel.ImageName);
                 }
                 Category category = AutoMapperConfig.mapper.Map<CategoryViewModel, Category>(viewModel);
@@ -129,26 +131,20 @@ namespace CMSArticle.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        // GET: Admin/Categories/Delete/5
-        public async Task<ActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Category category = await _Service.GetEntity(id.Value);
-            if (category == null)
-            {
-                return HttpNotFound();
-            }
-            return View(category);
-        }
-
         // POST: Admin/Categories/Delete/5
-        [HttpPost, ActionName("Delete")]
+        [HttpPost, /*ActionName("Delete")*/]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> DeleteConfirmed(int id)
+        public async Task<ActionResult> Delete(int id)
         {
+            //if (id is null)
+            //{
+            //    return Content("آیدی اشتباه است.");
+            //}
+            //Category category = await _Service.GetEntity(id.Value);
+            //if (category == null)
+            //{
+            //    return Content("موجودیتی با این آیدی وجود ندارد.");
+            //}
             await _Service.Delete(id);
             _Service.Save();
             return RedirectToAction("Index");
@@ -157,6 +153,7 @@ namespace CMSArticle.Areas.Admin.Controllers
         protected override void Dispose(bool disposing)
         {
             _Service.Dispose();
+        
         }
     }
 }

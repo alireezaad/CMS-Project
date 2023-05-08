@@ -10,7 +10,7 @@
 <input type="button" value="ایجاد دسته بندی جدید" class="btn btn-default btn-success" onclick="location.href='@Url.Action("Create")'" />
 <br />
 <br />
-<table class="table">
+<table class="table" id="index">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.CategoryId)
@@ -37,14 +37,33 @@
                 <img src="~/Images/Category/@item.ImageName" class="image150-100" />
             </td>
             <td>
-                @Html.ActionLink("ویرایش", "Edit", new { id = item.CategoryId }, new { @class = "btn btn-warning" }) |
-                @Html.ActionLink("جزییات", "Details", new { id = item.CategoryId }, new { @class = "btn btn-info" }) |
-                @Html.ActionLink("حذف", "Delete", new { id = item.CategoryId }, new { @class = "btn btn-danger" })
+                @Html.ActionLink("ویرایش", "Edit", new { id = item.CategoryId }, new { @class = "btn btn-primary" }) |
+                @*@Html.ActionLink("جزییات", "Details", new { id = item.CategoryId }, new { @class = "btn btn-info" })*@
+                @*@Html.ActionLink("حذف", "Delete", new { id = item.CategoryId }, new { @class = "btn btn-danger" })*@
+                <a class="btn btn-danger" onclick="DeleteCategory(@item.CategoryId)">حذف</a>
             </td>
         </tr>
     }
-
-
 </table>
+
+@section Scripts{
+    <script>
+    function DeleteCategory(catId) {
+        $.ajax({
+            url:"@Url.Action("Delete")",
+            type: 'POST',
+            data: { id: catId },
+            success: function (res) {
+                $("#index").html(res);
+            },
+            error: function () {
+                alert("نشد");
+            }
+        })
+    }
+    </script>
+}
+
+
 
 
