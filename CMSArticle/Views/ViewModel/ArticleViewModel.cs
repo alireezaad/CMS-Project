@@ -1,32 +1,47 @@
-﻿using System;
+﻿using CMS.ModelLayer;
+using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Web;
 
-namespace CMS.ModelLayer
+namespace CMSArticle.Views.ViewModel
 {
-    public class Article: BaseEntity
+    public class ArticleViewModel
     {
         [Key]
         [Required]
+        [Display(Name ="آیدی مقاله")]
         public int ArticleId { get; set; }
+
         [Required]
         [MaxLength(50)]
+        [Display(Name = "عنوان مقاله")]
         public string Title { get; set; }
+
         [Required]
+        [Display(Name = "محتوای مقاله")]
         public string Content { get; set; }
+
         [Required]
         [MaxLength(100)]
+        [Display(Name = "تصویر شاخص")]
         public string ImageName { get; set; }
+
         [Required]
+        [Display(Name = "تاریخ نگارش")]
         public DateTime RegisterDate { get; set; }
+
         [Required]
+        [Display(Name = "وضعیت")]
         public bool IsActive { get; set; }
+
+        [Display(Name = "لایک")]
         public int Like { get; set; }
+
+        [Display(Name = "بازدید")]
         public int Visit { get; set; }
+
         public int UserId { get; set; }
 
 

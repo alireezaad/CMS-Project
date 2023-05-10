@@ -43,116 +43,116 @@ namespace CMSArticle.Areas.Admin.Controllers
         //    }
         //    var viewModel = AutoMapperConfig.mapper.Map<Category, CategoryViewModel>(category);
         //    return View(viewModel);
-        }
 
-        [HttpGet]
-        public ActionResult Create()
-        {
-            return View();
-            
-        }
+    [HttpGet]
+    public ActionResult Create()
+    {
+        return View();
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title")] CategoryViewModel viewModel, HttpPostedFileBase newImage)
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Create([Bind(Include = "CategoryId,Title")] CategoryViewModel viewModel, HttpPostedFileBase newImage)
+    {
+        if (ModelState.IsValid)
         {
-            if (ModelState.IsValid)
+            string imageName = "nophoto.png";
+            if (newImage != null)
             {
-                string imageName = "nophoto.png";
-                if (newImage != null)
+                if (newImage.ContentType != "image/jpeg" && newImage.ContentType != "image/png")
                 {
-                    if (newImage.ContentType != "image/jpeg" && newImage.ContentType != "image/png")
-                    {
-                        ModelState.AddModelError("newImage", "فرمت عکس انتخابی باید png و یا jpg باشد");
-                        return View(viewModel);
-                    }
-                    if (newImage.ContentLength > 300000)
-                    {
-                        ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
-                        return View(viewModel);
-                    }   
-                    imageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
-                    newImage.SaveAs(Server.MapPath("/Images/Category/") + imageName);
+                    ModelState.AddModelError("newImage", "فرمت عکس انتخابی باید png و یا jpg باشد");
+                    return View(viewModel);
                 }
-                viewModel.ImageName = imageName;
-                Category category = AutoMapperConfig.mapper.Map<CategoryViewModel, Category>(viewModel);
-                 await _Service.Add(category);
-                 _Service.Save();
-                return RedirectToAction("Index");
-            }
-
-            return View(viewModel);
-        }
-
-        [HttpGet]
-        public async Task<ActionResult> Edit(int? id)
-        {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Category category = await _Service.GetEntity(id.Value);
-            if (category == null)
-            {
-                return HttpNotFound();
-            }
-            CategoryViewModel viewModel = AutoMapperConfig.mapper.Map<Category,CategoryViewModel >(category);
-            return View(viewModel);
-        }
-
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "CategoryId,Title,ImageName")] CategoryViewModel viewModel, HttpPostedFileBase newImage)
-        {
-            if (ModelState.IsValid)
-            {
-                if (newImage != null)
+                if (newImage.ContentLength > 300000)
                 {
-                    if (newImage.ContentType != "image/jpeg" && newImage.ContentType != "image/png")
-                    {
-                        ModelState.AddModelError("newImage", "فرمت عکس انتخابی باید png و یا jpg باشد");
-                        return View(viewModel);
-                    }
-                    if (newImage.ContentLength > 300000)
-                    {
-                        ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
-                        return View(viewModel);
-                    }
-                    System.IO.File.Delete(Server.MapPath("/Images/Category/") + viewModel.ImageName);
-                    //viewModel.ImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
-                    newImage.SaveAs(Server.MapPath("/Images/Category/") + viewModel.ImageName);
+                    ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
+                    return View(viewModel);
                 }
-                Category category = AutoMapperConfig.mapper.Map<CategoryViewModel, Category>(viewModel);
-                await _Service.Update(category);
-                _Service.Save();
-                return RedirectToAction("Index");
+                imageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
+                newImage.SaveAs(Server.MapPath("/Images/Category/") + imageName);
             }
-            return View(viewModel);
-        }
-
-        // POST: Admin/Categories/Delete/5
-        [HttpPost, /*ActionName("Delete")*/]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Delete(int id)
-        {
-            //if (id is null)
-            //{
-            //    return Content("آیدی اشتباه است.");
-            //}
-            //Category category = await _Service.GetEntity(id.Value);
-            //if (category == null)
-            //{
-            //    return Content("موجودیتی با این آیدی وجود ندارد.");
-            //}
-            await _Service.Delete(id);
+            viewModel.ImageName = imageName;
+            Category category = AutoMapperConfig.mapper.Map<CategoryViewModel, Category>(viewModel);
+            await _Service.Add(category);
             _Service.Save();
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            _Service.Dispose();
-        }
+        return View(viewModel);
     }
+
+    [HttpGet]
+    public async Task<ActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+        }
+        Category category = await _Service.GetEntity(id.Value);
+        if (category == null)
+        {
+            return HttpNotFound();
+        }
+        CategoryViewModel viewModel = AutoMapperConfig.mapper.Map<Category, CategoryViewModel>(category);
+        return View(viewModel);
+    }
+
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Edit([Bind(Include = "CategoryId,Title,ImageName")] CategoryViewModel viewModel, HttpPostedFileBase newImage)
+    {
+        if (ModelState.IsValid)
+        {
+            if (newImage != null)
+            {
+                if (newImage.ContentType != "image/jpeg" && newImage.ContentType != "image/png")
+                {
+                    ModelState.AddModelError("newImage", "فرمت عکس انتخابی باید png و یا jpg باشد");
+                    return View(viewModel);
+                }
+                if (newImage.ContentLength > 300000)
+                {
+                    ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
+                    return View(viewModel);
+                }
+                System.IO.File.Delete(Server.MapPath("/Images/Category/") + viewModel.ImageName);
+                //viewModel.ImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
+                newImage.SaveAs(Server.MapPath("/Images/Category/") + viewModel.ImageName);
+            }
+            Category category = AutoMapperConfig.mapper.Map<CategoryViewModel, Category>(viewModel);
+            await _Service.Update(category);
+            _Service.Save();
+            return RedirectToAction("Index");
+        }
+        return View(viewModel);
+    }
+
+    // POST: Admin/Categories/Delete/5
+    [HttpPost, /*ActionName("Delete")*/]
+    [ValidateAntiForgeryToken]
+    public async Task<ActionResult> Delete(int id)
+    {
+        //if (id is null)
+        //{
+        //    return Content("آیدی اشتباه است.");
+        //}
+        //Category category = await _Service.GetEntity(id.Value);
+        //if (category == null)
+        //{
+        //    return Content("موجودیتی با این آیدی وجود ندارد.");
+        //}
+        await _Service.Delete(id);
+        _Service.Save();
+        return RedirectToAction("Index");
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        _Service.Dispose();
+    }
+    }
+
 }

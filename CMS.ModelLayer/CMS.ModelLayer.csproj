@@ -61,6 +61,10 @@
     <Compile Include="Migrations\202305051037167_createDB.Designer.cs">
       <DependentUpon>202305051037167_createDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202305101444003_editArticelModel.cs" />
+    <Compile Include="Migrations\202305101444003_editArticelModel.Designer.cs">
+      <DependentUpon>202305101444003_editArticelModel.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="User.cs" />
     <Compile Include="CMSContext.cs" />
@@ -73,6 +77,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\202305051037167_createDB.resx">
       <DependentUpon>202305051037167_createDB.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202305101444003_editArticelModel.resx">
+      <DependentUpon>202305101444003_editArticelModel.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

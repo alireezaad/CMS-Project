@@ -18,6 +18,8 @@ namespace CodeFirst_EF.App_Start
             {
                 t.CreateMap<Category, CategoryViewModel>().IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
                 t.CreateMap<CategoryViewModel,Category >().IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
+                t.CreateMap<ArticleViewModel, Article>().IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
+                t.CreateMap<Article, ArticleViewModel>().IgnoreAllSourcePropertiesWithAnInaccessibleSetter();
 
             });
             mapper = configuration.CreateMapper();
