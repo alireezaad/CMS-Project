@@ -1,8 +1,7 @@
 namespace CMS.ModelLayer.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class editArticelModel : DbMigration
     {
         public override void Up()
@@ -15,7 +14,7 @@ namespace CMS.ModelLayer.Migrations
             AddForeignKey("dbo.Articles", "UserId", "dbo.Users", "UserId", cascadeDelete: true);
             DropColumn("dbo.Articles", "AdminId");
         }
-        
+
         public override void Down()
         {
             AddColumn("dbo.Articles", "AdminId", c => c.Int(nullable: false));

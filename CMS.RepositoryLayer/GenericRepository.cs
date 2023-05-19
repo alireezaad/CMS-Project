@@ -1,10 +1,8 @@
-﻿using System;
+﻿using CMS.ModelLayer;
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using CMS.ModelLayer;
 
 
 namespace CMS.RepositoryLayer
@@ -76,7 +74,7 @@ namespace CMS.RepositoryLayer
             {
                 T entity = await GetEntity(id);
                 db.Entry(entity).State = EntityState.Deleted;
-                return  true;
+                return true;
             }
             catch (Exception)
             {

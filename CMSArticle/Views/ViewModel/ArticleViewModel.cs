@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace CMSArticle.Views.ViewModel
 {
@@ -11,7 +9,7 @@ namespace CMSArticle.Views.ViewModel
     {
         [Key]
         [Required]
-        [Display(Name ="آیدی مقاله")]
+        [Display(Name = "آیدی مقاله")]
         public int ArticleId { get; set; }
 
         [Required]

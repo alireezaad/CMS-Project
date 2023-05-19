@@ -1,5 +1,4 @@
-﻿using System.Web;
-using System.Web.Optimization;
+﻿using System.Web.Optimization;
 
 namespace CodeFirst_EF
 {
@@ -13,7 +12,7 @@ namespace CodeFirst_EF
                      "~/Content/bootstrap.min.css",
                      "~/Content/site.css"));
 
-            
+
             bundles.Add(new Bundle("~/Scripts/jquery").Include("~/Scripts/bootstrap.min.js",
                       "~/Scripts/bootstrap.bundle.js",
                       "~/Scripts/modernizr-2.8.3.js",

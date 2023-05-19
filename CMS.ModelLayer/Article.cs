@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CMS.ModelLayer
 {
-    public class Article: BaseEntity
+    public class Article : BaseEntity
     {
         [Key]
         [Required]
@@ -28,6 +24,7 @@ namespace CMS.ModelLayer
         public int Like { get; set; }
         public int Visit { get; set; }
         public int UserId { get; set; }
+        public int CategoryId{ get; set; }
 
 
         public Category category { get; set; }
