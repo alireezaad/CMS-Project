@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 
 namespace CMSArticle.Views.ViewModel
 {
@@ -19,9 +20,10 @@ namespace CMSArticle.Views.ViewModel
 
         [Required]
         [Display(Name = "محتوای مقاله")]
+        [DataType(DataType.MultilineText)]
+        [AllowHtml]
         public string Content { get; set; }
 
-        [Required]
         [MaxLength(100)]
         [Display(Name = "تصویر شاخص")]
         public string ImageName { get; set; }
@@ -41,6 +43,8 @@ namespace CMSArticle.Views.ViewModel
         public int Visit { get; set; }
 
         public int UserId { get; set; }
+        public int CategoryId { get; set; }
+
 
 
         public Category category { get; set; }
