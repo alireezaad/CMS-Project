@@ -45,6 +45,10 @@ namespace CMSArticle.Controllers
                 if (admin != null)
                 {
                     FormsAuthentication.SetAuthCookie(userViewModel.Phonenumber, userViewModel.SavePassword);
+                    if (userViewModel.ReturnUrl is null)
+                    {
+                        userViewModel.ReturnUrl = "/";
+                    }
                     return Redirect(userViewModel.ReturnUrl);
                 }
                 ModelState.AddModelError("PhoneNumber", "شماره موبایل یا رمز عبور شما اشتباه است!");

@@ -13,6 +13,7 @@ using CodeFirst_EF.App_Start;
 using System.Web.Services.Description;
 using CMS.ServiceLayer;
 using System.IO;
+using System.Web.Helpers;
 
 namespace CMSArticle.Areas.Admin.Controllers
 {
@@ -22,17 +23,22 @@ namespace CMSArticle.Areas.Admin.Controllers
 
         ArticleService _ArticleService;
         UserService _UserService;
+        CategoryService _CategoryService;
         public ArticlesController()
         {
             _ArticleService = new ArticleService(db);
             _UserService= new UserService(db);
+            _CategoryService = new CategoryService(db);
         }
 
         // GET: Admin/Articles
         public async Task<ActionResult> Index()
         {
+            ViewBag.CategoryId = new SelectList(await _CategoryService.GetAll(), "CategoryId", "Title");
+            ViewBag.UserId = new SelectList(await _UserService.GetAll(), "UserId", "Name");
             var articles = await _ArticleService.GetAll();
             var articleViewModels = AutoMapperConfig.mapper.Map<List<Article>, List<ArticleViewModel>>((List<Article>)articles);
+            
             return View(articleViewModels);
         }
 
@@ -52,10 +58,10 @@ namespace CMSArticle.Areas.Admin.Controllers
         //}
 
         // GET: Admin/Articles/Create
-        public ActionResult Create()
+        public async Task<ActionResult> Create()
         {
-            ViewBag.CategoryId = new SelectList(db.categories, "CategoryId", "Title");
-            ViewBag.UserId = new SelectList(db.users, "UserId", "Name");
+            ViewBag.CategoryId = new SelectList(await _CategoryService.GetAll(), "CategoryId", "Title");
+            ViewBag.UserId = new SelectList(await _UserService.GetAll(), "UserId", "Name");
             return View();
         }
 
@@ -111,14 +117,15 @@ namespace CMSArticle.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Article article = await db.articles.FindAsync(id);
+            Article article = await _ArticleService.GetEntity(id.Value);
             if (article == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.CategoryId = new SelectList(db.categories, "CategoryId", "Title", article.CategoryId);
-            ViewBag.UserId = new SelectList(db.users, "UserId", "Name", article.UserId);
-            return View(article);
+            ViewBag.CategoryId = new SelectList(await _CategoryService.GetAll(), "CategoryId", "Title");
+            ViewBag.UserId = new SelectList(await _UserService.GetAll(), "UserId", "Name");
+            var articleViewModel = AutoMapperConfig.mapper.Map<Article, ArticleViewModel>(article);
+            return View(articleViewModel);
         }
 
         // POST: Admin/Articles/Edit/5
@@ -126,17 +133,34 @@ namespace CMSArticle.Areas.Admin.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Edit([Bind(Include = "ArticleId,Title,Content,ImageName,RegisterDate,IsActive,Like,Visit,UserId,CategoryId")] Article article)
+        public async Task<ActionResult> Edit([Bind(Include = "ArticleId,Title,Content,ImageName,RegisterDate,IsActive,Like,Visit,UserId,CategoryId")] ArticleViewModel articleViewModel, HttpPostedFileBase newImage)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(article).State = EntityState.Modified;
-                await db.SaveChangesAsync();
+                if (newImage != null)
+                {
+                    if (newImage.ContentType != "image/jpeg" && newImage.ContentType != "image/png")
+                    {
+                        ModelState.AddModelError("newImage", "فرمت عکس انتخابی باید png و یا jpg باشد");
+                        return View(articleViewModel);
+                    }
+                    if (newImage.ContentLength > 300000)
+                    {
+                        ModelState.AddModelError("newImage", "حجم عکس انتخابی باید کمتر از 300 کیلوبایت باشد");
+                        return View(articleViewModel);
+                    }
+                    System.IO.File.Delete(Server.MapPath("/Images/Article/") + articleViewModel.ImageName);
+                    //viewModel.ImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
+                    newImage.SaveAs(Server.MapPath("/Images/Article/") + articleViewModel.ImageName);
+                }
+                var article = AutoMapperConfig.mapper.Map<ArticleViewModel,Article>(articleViewModel);
+                await _ArticleService.Update(article);
+                _ArticleService.Save();
                 return RedirectToAction("Index");
             }
-            ViewBag.CategoryId = new SelectList(db.categories, "CategoryId", "Title", article.CategoryId);
-            ViewBag.UserId = new SelectList(db.users, "UserId", "Name", article.UserId);
-            return View(article);
+            ViewBag.CategoryId = new SelectList(await _CategoryService.GetAll(), "CategoryId", "Title");
+            ViewBag.UserId = new SelectList(await _UserService.GetAll(), "UserId", "Name");
+            return View(articleViewModel);
         }
 
         // GET: Admin/Articles/Delete/5
@@ -146,12 +170,14 @@ namespace CMSArticle.Areas.Admin.Controllers
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Article article = await db.articles.FindAsync(id);
+            Article article = await _ArticleService.GetEntity(id.Value);
+
             if (article == null)
             {
                 return HttpNotFound();
             }
-            return View(article);
+            var articleViewModel = AutoMapperConfig.mapper.Map<Article, ArticleViewModel>(article);
+            return View(articleViewModel);
         }
 
         // POST: Admin/Articles/Delete/5
@@ -159,9 +185,9 @@ namespace CMSArticle.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> DeleteConfirmed(int id)
         {
-            Article article = await db.articles.FindAsync(id);
-            db.articles.Remove(article);
-            await db.SaveChangesAsync();
+            Article article = await _ArticleService.GetEntity(id);
+            await _ArticleService.Delete(article);
+            _ArticleService.Save();
             return RedirectToAction("Index");
         }
 

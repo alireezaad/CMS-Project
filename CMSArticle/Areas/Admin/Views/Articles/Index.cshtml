@@ -31,7 +31,7 @@
             @Html.DisplayNameFor(model => model.Visit)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.CategoryId)
+            دسته بندی
         </th>
         <th></th>
     </tr>
@@ -43,7 +43,7 @@
             @Html.DisplayFor(modelItem => item.Title)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.user.Name)
+            @item.user.Name @item.user.Family
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.RegisterDate)
@@ -68,7 +68,7 @@
             @Html.DisplayFor(modelItem => item.Visit)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.CategoryId)
+            @item.category.Title
         </td>
         <td>
             @Html.ActionLink("ویرایش", "Edit", new { id = item.ArticleId }, new { @class = "btn btn-warning" }) |
