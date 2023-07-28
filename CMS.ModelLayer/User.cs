@@ -19,7 +19,6 @@ namespace CMS.ModelLayer
         [MaxLength(15)]
         public string Phonenumber { get; set; }
         [Required]
-        [MaxLength(15)]
         public string Password { get; set; }
         [Required]
         public DateTime RegisterDate { get; set; }

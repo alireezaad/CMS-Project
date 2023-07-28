@@ -1,8 +1,7 @@
 ﻿namespace CMS.ModelLayer.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
-    
+
     public partial class editArticleTable : DbMigration
     {
         public override void Up()
@@ -14,7 +13,7 @@
             CreateIndex("dbo.Articles", "CategoryId");
             AddForeignKey("dbo.Articles", "CategoryId", "dbo.Categories", "CategoryId", cascadeDelete: true);
         }
-        
+
         public override void Down()
         {
             DropForeignKey("dbo.Articles", "CategoryId", "dbo.Categories");

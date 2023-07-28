@@ -9,6 +9,8 @@ namespace CMS.ModelLayer
         public DbSet<Article> articles { get; set; }
         public DbSet<Comment> comments { get; set; }
 
+        //public System.Data.Entity.DbSet<CMSArticle.Views.ViewModel.UserViewModel> UserViewModels { get; set; }
+
         //public System.Data.Entity.DbSet<CMSArticle.Views.ViewModel.ArticleViewModel> ArticleViewModels { get; set; }
 
         //public System.Data.Entity.DbSet<CMSArticle.Views.ViewModel.ArticleViewModel> ArticleViewModels { get; set; }

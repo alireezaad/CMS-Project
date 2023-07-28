@@ -30,6 +30,7 @@ namespace CMSArticle.Views.ViewModel
 
         [Required]
         [Display(Name = "تاریخ نگارش")]
+        [DisplayFormat(DataFormatString = "{0: dddd, dd MMMM yyyy}")]
         public DateTime RegisterDate { get; set; }
 
         [Required]

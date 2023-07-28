@@ -73,6 +73,10 @@
     <Compile Include="Migrations\202305190132049_editArticleTable.designer.cs">
       <DependentUpon>202305190132049_editArticleTable.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\202306031327542_editUser.cs" />
+    <Compile Include="Migrations\202306031327542_editUser.designer.cs">
+      <DependentUpon>202306031327542_editUser.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="User.cs" />
     <Compile Include="CMSContext.cs" />
@@ -91,6 +95,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\202305190132049_editArticleTable.resx">
       <DependentUpon>202305190132049_editArticleTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\202306031327542_editUser.resx">
+      <DependentUpon>202306031327542_editUser.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,5 @@
+{
+    "genieai.enableConversationHistory": true,
+    "easycode.model": "gpt-3.5-turbo",
+    "chatgpt-helper.model": "gpt-4"
+}

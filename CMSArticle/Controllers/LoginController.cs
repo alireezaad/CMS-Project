@@ -1,28 +1,25 @@
 ﻿using CMS.ModelLayer;
 using CMS.ServiceLayer;
 using CMSArticle.Views.ViewModel;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
 namespace CMSArticle.Controllers
 {
-    public class UserController : Controller
+    public class LoginController : Controller
     {
         CMSContext db = new CMSContext();
         UserService _UserService;
-        public UserController()
+        public LoginController()
         {
             _UserService = new UserService(db);
         }
         [HttpGet]
         public ActionResult Login(string returnUrl = "/")
         {
-            UserViewModel model = new UserViewModel() { ReturnUrl = returnUrl};
+            UserLoginViewModel model = new UserLoginViewModel() { ReturnUrl = returnUrl };
             //if (string.IsNullOrEmpty(returnUrl) && Request.UrlReferrer != null)
             //    returnUrl = Server.UrlEncode(Request.UrlReferrer.PathAndQuery);
             //if (Url.IsLocalUrl(returnUrl) && !string.IsNullOrEmpty(returnUrl))
@@ -36,12 +33,13 @@ namespace CMSArticle.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login([Bind(Include = "Phonenumber,Password,SavePassword,ReturnUrl")] UserViewModel userViewModel) 
+        public async Task<ActionResult> Login([Bind(Include = "Phonenumber,Password,SavePassword,ReturnUrl")] UserLoginViewModel userViewModel)
         {
             if (ModelState.IsValid)
             {
+                userViewModel.Password = HashPass.ComputeSha256Hash(userViewModel.Password);
                 var tempList = await _UserService.GetAll();
-                var admin =  tempList.FirstOrDefault(a => a.Phonenumber== userViewModel.Phonenumber && a.Password == userViewModel.Password);    
+                var admin = tempList.FirstOrDefault(a => a.Phonenumber == userViewModel.Phonenumber && a.Password == userViewModel.Password);
                 if (admin != null)
                 {
                     FormsAuthentication.SetAuthCookie(userViewModel.Phonenumber, userViewModel.SavePassword);

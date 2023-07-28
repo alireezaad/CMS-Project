@@ -1,0 +1,63 @@
+﻿@model IEnumerable<CMSArticle.Views.ViewModel.UserViewModel>
+
+@{
+    ViewBag.Title = "لیست ادمین ها ";
+}
+
+<h2>ادمین های سایت عبارت اند از:</h2>
+
+<br />
+<br />
+<table class="table">
+    <tr>
+        <th>
+            نام و نام خانوادگی
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Phonenumber)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.RegisterDate)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.IsActive)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+                @Html.DisplayFor(modelItem => item.Family)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Phonenumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RegisterDate)
+            </td>
+            <td>
+                @if (item.IsActive)
+                {
+                    <span style="color:green">فعال</span>
+
+                }
+                else
+                {
+                    <span style="color:red">مسدود</span>
+
+                }
+            </td>
+            <td>
+                @Html.ActionLink("ویرایش", "Edit", new { id = item.UserId }, new { @class = "btn btn-warning" })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<p>
+    @Html.ActionLink("ایجاد ادمین جدید", "Create", "", new { @class = "btn btn-success" })
+</p>

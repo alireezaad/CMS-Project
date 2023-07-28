@@ -16,8 +16,8 @@ namespace CMS.ServiceLayer
         public async Task<int> GetAdminId(string PhoneNumber)
         {
 
-            var tempList =await _UserRepo.GetAll();
-            return  tempList.FirstOrDefault(a => a.Phonenumber == PhoneNumber).UserId;
+            var tempList = await _UserRepo.GetAll();
+            return tempList.FirstOrDefault(a => a.Phonenumber == PhoneNumber).UserId;
         }
     }
 }

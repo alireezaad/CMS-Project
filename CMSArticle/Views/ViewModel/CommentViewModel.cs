@@ -1,9 +1,6 @@
 ﻿using CMS.ModelLayer;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace CMSArticle.Views.ViewModel
@@ -29,6 +26,7 @@ namespace CMSArticle.Views.ViewModel
         public string Content { get; set; }
         [Required]
         [Display(Name = "تاریخ درج")]
+        [DisplayFormat(DataFormatString = "{0: dddd, dd MMMM yyyy}")]
         public DateTime RegisterDate { get; set; }
         [Required]
         [Display(Name = "وضعیت")]

@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using CMS.ModelLayer;
+﻿using CMS.ModelLayer;
+using CMS.ServiceLayer;
 using CMSArticle.Views.ViewModel;
 using CodeFirst_EF.App_Start;
-using System.Web.Services.Description;
-using CMS.ServiceLayer;
+using System;
+using System.Collections.Generic;
 using System.IO;
-using System.Web.Helpers;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web;
+using System.Web.Mvc;
 
 namespace CMSArticle.Areas.Admin.Controllers
 {
@@ -27,7 +22,7 @@ namespace CMSArticle.Areas.Admin.Controllers
         public ArticlesController()
         {
             _ArticleService = new ArticleService(db);
-            _UserService= new UserService(db);
+            _UserService = new UserService(db);
             _CategoryService = new CategoryService(db);
         }
 
@@ -38,7 +33,7 @@ namespace CMSArticle.Areas.Admin.Controllers
             ViewBag.UserId = new SelectList(await _UserService.GetAll(), "UserId", "Name");
             var articles = await _ArticleService.GetAll();
             var articleViewModels = AutoMapperConfig.mapper.Map<List<Article>, List<ArticleViewModel>>((List<Article>)articles);
-            
+
             return View(articleViewModels);
         }
 
@@ -91,15 +86,15 @@ namespace CMSArticle.Areas.Admin.Controllers
                     }
 
                     newImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(imageUpload.FileName);
-                    imageUpload.SaveAs(Server.MapPath("/Images/Article/")+ newImageName);
+                    imageUpload.SaveAs(Server.MapPath("/Images/Article/") + newImageName);
                 }
                 var article = AutoMapperConfig.mapper.Map<ArticleViewModel, Article>(articleViewModel);
                 article.ImageName = newImageName;
-                article.IsActive= true;
+                article.IsActive = true;
                 article.RegisterDate = DateTime.Now;
                 article.Visit = 15;
                 article.Like = 3;
-                article.UserId =await _UserService.GetAdminId(User.Identity.Name);
+                article.UserId = await _UserService.GetAdminId(User.Identity.Name);
                 await _ArticleService.Add(article);
                 _ArticleService.Save();
                 return RedirectToAction("Index");
@@ -153,7 +148,7 @@ namespace CMSArticle.Areas.Admin.Controllers
                     //viewModel.ImageName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(newImage.FileName);
                     newImage.SaveAs(Server.MapPath("/Images/Article/") + articleViewModel.ImageName);
                 }
-                var article = AutoMapperConfig.mapper.Map<ArticleViewModel,Article>(articleViewModel);
+                var article = AutoMapperConfig.mapper.Map<ArticleViewModel, Article>(articleViewModel);
                 await _ArticleService.Update(article);
                 _ArticleService.Save();
                 return RedirectToAction("Index");

@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Entity;
-using System.Linq;
-using System.Threading.Tasks;
-using System.Net;
-using System.Web;
-using System.Web.Mvc;
-using CMS.ModelLayer;
+﻿using CMS.ModelLayer;
 using CMS.ServiceLayer;
-using CodeFirst_EF.App_Start;
 using CMSArticle.Views.ViewModel;
+using CodeFirst_EF.App_Start;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
+using System.Web.Mvc;
 
 namespace CMSArticle.Areas.Admin.Controllers
 {
